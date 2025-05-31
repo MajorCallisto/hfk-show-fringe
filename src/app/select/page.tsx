@@ -1,6 +1,6 @@
 "use client";
 
-import { slideData, useAppContext } from "@/components/providers/AppProvider";
+      import { slideData, useAppContext } from "@/components/providers/AppProvider";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -24,6 +24,10 @@ const Page = () => {
   const [boxes, setBoxes] = useState<(number | null)[]>(Array(4).fill(null));
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [recordingBox, setRecordingBox] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number | string | null>(null);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -59,7 +63,28 @@ const Page = () => {
     resetApp();
   };
 
-  const startRecording = async (boxIndex: number) => {
+  const startCountdownAndRecord = (boxIndex: number) => {
+    setShowOverlay(true);
+    setCountdown(3);
+    setRecordingBox(boxIndex);
+
+    let timer = 3;
+
+    const interval = setInterval(() => {
+      timer -= 1;
+      if (timer > 0) {
+        setCountdown(timer);
+      } else if (timer === 0) {
+        setCountdown("Go");
+      } else {
+        clearInterval(interval);
+        setCountdown(null);
+        beginRecording();
+      }
+    }, 1000);
+  };
+
+  const beginRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
@@ -69,26 +94,46 @@ const Page = () => {
       chunksRef.current.push(e.data);
     };
 
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `recording-box-${boxIndex}.webm`;
-      a.click();
-    };
-
     mediaRecorder.start();
-    setRecordingBox(boxIndex);
+    setIsRecording(true);
   };
 
   const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setRecordingBox(null);
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+        a.href = url;
+        a.download = `recording-box-${recordingBox}.webm`;
+        a.click();
+
+        // Cleanup
+        setIsRecording(false);
+        setShowOverlay(false);
+        setRecordingBox(null);
+      };
+    }
   };
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-4 relative">
+      {showOverlay && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center text-white text-6xl font-bold space-y-6">
+          {countdown !== null ? (
+            <div>{countdown}</div>
+          ) : (
+            <>
+              <div>Recording...</div>
+              <Button onClick={stopRecording} variant="outline">
+                Stop
+              </Button>
+            </>
+          )}
+        </div>
+      )}
+
       <h1 className="text-2xl font-bold">Select 5 Items</h1>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
         {slideData.map((slide, index) => (
@@ -126,11 +171,13 @@ const Page = () => {
                 </div>
                 <Button
                   onClick={() =>
-                    recordingBox === idx ? stopRecording() : startRecording(idx)
+                    isRecording && recordingBox === idx
+                      ? stopRecording()
+                      : startCountdownAndRecord(idx)
                   }
                   variant="outline"
                 >
-                  {recordingBox === idx ? "Stop Recording" : "Record"}
+                  {isRecording && recordingBox === idx ? "Stop Recording" : "Record"}
                 </Button>
               </>
             )}

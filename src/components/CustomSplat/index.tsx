@@ -1,3 +1,4 @@
+//@ts-nocheck
 // Based on:
 //   Kevin Kwok https://github.com/antimatter15/splat
 //   Quadjr https://github.com/quadjr/aframe-gaussian-splatting
@@ -19,6 +20,10 @@ export type SplatMaterialType = {
   viewport?: THREE.Vector2
   focal?: number
   radiusScale?: number
+}
+
+type InferUniformProps<T> = {
+  [K in keyof T]?: T[K]
 }
 
 
@@ -58,7 +63,7 @@ export type SharedState = {
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
-    splatMaterial: SplatMaterialType & ThreeElements['shaderMaterial']
+    splatMaterial: ThreeElements['shaderMaterial'] & InferUniformProps<SplatMaterialType>
   }
 }
 
@@ -312,14 +317,14 @@ async function load(shared: SharedState) {
   const data = await fetch(shared.url)
 
   if (data.body === null) throw 'Failed to fetch file'
-  let _totalDownloadBytes = data.headers.get('Content-Length')
+  const _totalDownloadBytes = data.headers.get('Content-Length')
   const totalDownloadBytes = _totalDownloadBytes ? parseInt(_totalDownloadBytes) : undefined
   if (totalDownloadBytes == undefined) throw 'Failed to get content length'
   shared.stream = data.body.getReader()
   shared.totalDownloadBytes = totalDownloadBytes
   shared.numVertices = Math.floor(shared.totalDownloadBytes / shared.rowLength)
   const context = shared.gl.getContext()
-  let maxTextureSize = context.getParameter(context.MAX_TEXTURE_SIZE)
+  const maxTextureSize = context.getParameter(context.MAX_TEXTURE_SIZE)
   shared.maxVertexes = maxTextureSize * maxTextureSize
 
   if (shared.numVertices > shared.maxVertexes) shared.numVertices = shared.maxVertexes
@@ -378,7 +383,7 @@ async function lazyLoad(shared: SharedState) {
       chunks.push(value)
       const bytesRemains = bytesDownloaded - bytesProcessed
       if (shared.totalDownloadBytes != undefined && bytesRemains > shared.rowLength * shared.chunkSize) {
-        let vertexCount = Math.floor(bytesRemains / shared.rowLength)
+        const vertexCount = Math.floor(bytesRemains / shared.rowLength)
         const concatenatedChunksbuffer = new Uint8Array(bytesRemains)
         let offset = 0
         for (const chunk of chunks) {
@@ -417,13 +422,13 @@ async function lazyLoad(shared: SharedState) {
 
   if (bytesDownloaded - bytesProcessed > 0) {
     // Concatenate the chunks into a single Uint8Array
-    let concatenatedChunks = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0))
+    const concatenatedChunks = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0))
     let offset = 0
     for (const chunk of chunks) {
       concatenatedChunks.set(chunk, offset)
       offset += chunk.length
     }
-    let numVertices = Math.floor(concatenatedChunks.byteLength / shared.rowLength)
+    const numVertices = Math.floor(concatenatedChunks.byteLength / shared.rowLength)
     const matrices = pushDataBuffer(shared, concatenatedChunks.buffer, numVertices)
     shared.worker.postMessage(
       { method: 'push', src: shared.url, length: numVertices * 16, matrices: matrices.buffer },
@@ -468,7 +473,7 @@ function connect(shared: SharedState, target: TargetMesh) {
   target.vm2 = new THREE.Matrix4()
   target.viewport = new THREE.Vector4()
 
-  let splatIndexArray = new Uint32Array(shared.bufferTextureWidth * shared.bufferTextureHeight)
+  const splatIndexArray = new Uint32Array(shared.bufferTextureWidth * shared.bufferTextureHeight)
   const splatIndexes = new THREE.InstancedBufferAttribute(splatIndexArray, 1, false)
   splatIndexes.setUsage(THREE.DynamicDrawUsage)
 
@@ -488,7 +493,7 @@ function connect(shared: SharedState, target: TargetMesh) {
 
   function listener(e: { data: { key: string; indices: Uint32Array } }) {
     if (target && e.data.key === target.uuid) {
-      let indexes = new Uint32Array(e.data.indices)
+      const indexes = new Uint32Array(e.data.indices)
       // @ts-ignore
       geometry.attributes.splatIndex.set(indexes)
       geometry.attributes.splatIndex.needsUpdate = true
@@ -503,7 +508,9 @@ function connect(shared: SharedState, target: TargetMesh) {
       const centerAndScaleTextureProperties = shared.gl.properties.get(shared.centerAndScaleTexture)
       const covAndColorTextureProperties = shared.gl.properties.get(shared.covAndColorTexture)
       if (
+        //@ts-ignore
         centerAndScaleTextureProperties?.__webglTexture &&
+        //@ts-ignore
         covAndColorTextureProperties?.__webglTexture &&
         shared.loadedVertexCount > 0
       )
@@ -599,6 +606,7 @@ function pushDataBuffer(shared: SharedState, buffer: ArrayBufferLike, vertexCoun
     }
 
     const centerAndScaleTextureProperties = shared.gl.properties.get(shared.centerAndScaleTexture)
+    //@ts-ignore
     context.bindTexture(context.TEXTURE_2D, centerAndScaleTextureProperties.__webglTexture)
     context.texSubImage2D(
       context.TEXTURE_2D,
@@ -614,6 +622,7 @@ function pushDataBuffer(shared: SharedState, buffer: ArrayBufferLike, vertexCoun
     )
 
     const covAndColorTextureProperties = shared.gl.properties.get(shared.covAndColorTexture)
+    //@ts-ignore
     context.bindTexture(context.TEXTURE_2D, covAndColorTextureProperties.__webglTexture)
     context.texSubImage2D(
       context.TEXTURE_2D,

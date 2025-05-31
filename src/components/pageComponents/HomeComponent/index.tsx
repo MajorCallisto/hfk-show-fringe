@@ -55,7 +55,8 @@ const GroupHome = ({ startProgress }: { startProgress: number }) => {
 const Home = () => {
   const params = useParams();
   const progressParam = params?.progress;
-  const progress = Math.min(Math.max(parseFloat(progressParam ?? "0"), 0), 1);
+  const progress = Math.min(Math.max(parseFloat(Array.isArray(progressParam) ? progressParam[0] : progressParam ?? "0"), 0), 1)
+
 
   return (
     <div className="w-screen h-screen overflow-hidden m-0 p-0">
