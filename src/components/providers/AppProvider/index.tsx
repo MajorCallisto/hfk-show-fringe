@@ -5,7 +5,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 
 const routes = ["/0", "/slide/0.01", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
 
-const prompts = ["Hey there, I'm <name>—welcome to <play>.",
+export const prompts = ["Hey there, I'm <name>—welcome to <play>.",
 "Hi! My name's <name>, and you're watching <play>.",
 "I'm <name>, and this right here is <play>.",
 "Hello, I'm <name>. Let's dive into <play>.",
@@ -35,7 +35,8 @@ type AppContextType = {
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
   resetApp: () => void;
-  setBoostSignal: (value: number) => void; // ← ADD THIS
+  boostSignal:number;
+  setBoostSignal?: (value: number) => void; // ← ADD THIS
 };
 
 export const AppContext = createContext<AppContextType>({
@@ -79,7 +80,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const handleKeyDown = (e: KeyboardEvent) => {
         // console.log("e",e.key);
       const saved = localStorage.getItem("currentIndex");
-      let index = saved ? parseInt(saved, 10) : 0;
+      const index = saved ? parseInt(saved, 10) : 0;
 
       if ((e.key === "ArrowRight" || e.key === "PageDown")  && index < routes.length - 1) {
         const next = index + 1;
