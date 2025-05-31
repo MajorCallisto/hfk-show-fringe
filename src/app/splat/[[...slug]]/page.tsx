@@ -76,6 +76,20 @@ const SplatPage = () => {
       }
     );
   };
+type ToggleTuple = [label: string, value: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>];
+
+const toggles: ToggleTuple[] = [
+  ["Noise", showNoise, setShowNoise],
+  ["Vignette", showVignette, setShowVignette],
+  ["ASCII", showAscii, setShowAscii],
+  ["Glitch", showGlitch, setShowGlitch],
+  ["TiltShift", showTiltShift, setShowTiltShift],
+  ["DotScreen", showDotScreen, setShowDotScreen],
+  ["Scanline", showScanline, setShowScanline],
+  ["Pixelation", showPixelation, setShowPixelation],
+  ["Chromatic", showChromaticAberration, setShowChromaticAberration],
+];
+
 
   return (
     <div className="relative w-screen h-screen">
@@ -146,17 +160,7 @@ const SplatPage = () => {
 
         <div className="border-t border-gray-600 pt-4 space-y-1">
           <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Post Effects</p>
-          {[
-            ["Noise", showNoise, setShowNoise],
-            ["Vignette", showVignette, setShowVignette],
-            ["ASCII", showAscii, setShowAscii],
-            ["Glitch", showGlitch, setShowGlitch],
-            ["TiltShift", showTiltShift, setShowTiltShift],
-            ["DotScreen", showDotScreen, setShowDotScreen],
-            ["Scanline", showScanline, setShowScanline],
-            ["Pixelation", showPixelation, setShowPixelation],
-            ["Chromatic", showChromaticAberration, setShowChromaticAberration],
-          ].map(([label, value, setter]) => (
+          {toggles.map(([label, value, setter]) => (
             <label key={label} className="flex items-center justify-between">
               <span>{label}</span>
               <input
@@ -192,6 +196,7 @@ const SplatPage = () => {
         />
 
         <EffectComposer>
+          <>
           {showNoise && <Noise opacity={0.125} />}
           {showVignette && <Vignette eskil={false} offset={0.1} darkness={1.1} opacity={0.5} />}
           {showAscii && <ASCII />}
@@ -213,6 +218,7 @@ const SplatPage = () => {
           {showChromaticAberration && (
             <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.002, 0.002]} />
           )}
+          </>
         </EffectComposer>
       </Canvas>
     </div>
