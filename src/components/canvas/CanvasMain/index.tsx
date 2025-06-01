@@ -1,5 +1,6 @@
 "use client";
 
+import { AppContext } from "@/components/providers/AppProvider";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer, Noise, TiltShift } from "@react-three/postprocessing";
@@ -7,7 +8,6 @@ import * as React from "react";
 
 type CanvasMainProps = {
   children: React.ReactNode;
-  progress: number; // from 0 to 1
 };
 
 // Helper to interpolate between two hex colors
@@ -36,14 +36,26 @@ const CameraSetup = () => {
   return <OrbitControls target={[0, 0, 0]} />;
 };
 
-const CanvasMain = ({ children, progress }: CanvasMainProps) => {
-  const background =
-    progress > 0.5
-      ? interpolateColor("#000000", "#CCEEFF", (progress - 0.5) * 2)
-      : "#000000";
+const CanvasMain = ({ children }: CanvasMainProps) => {
+  const { boostSignal } = React.useContext(AppContext);
+  const lastSignalRef = React.useRef<number>(0);
+  const colorStart = "#000000";
+  const colorEnd = "#CCEEFF";
+
+  
+  const [currentColor, setCurrentColor] = React.useState(colorStart);
+
+  React.useEffect(() => {
+    if (boostSignal !== lastSignalRef.current) {
+      lastSignalRef.current = lastSignalRef.current < 1? lastSignalRef.current + 0.25 : 1;
+
+      setCurrentColor(interpolateColor(colorStart, colorEnd, lastSignalRef.current));
+    }
+  }, [boostSignal]);
+
 
   return (
-    <Canvas className="w-full h-full" gl={{ alpha: true }} style={{ background }}>
+    <Canvas className="w-full h-full transition-colors duration-10000 ease-in-out" gl={{ alpha: true }} style={{ backgroundColor: currentColor }}>
       <CameraSetup />
       <EffectComposer>
         <Bloom />

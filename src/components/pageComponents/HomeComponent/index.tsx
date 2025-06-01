@@ -57,10 +57,9 @@ const Home = () => {
   const progressParam = params?.progress;
   const progress = Math.min(Math.max(parseFloat(Array.isArray(progressParam) ? progressParam[0] : progressParam ?? "0"), 0), 1)
 
-
   return (
     <div className="w-screen h-screen overflow-hidden m-0 p-0">
-      <CanvasMain progress={progress}>
+      <CanvasMain>
         <GroupHome startProgress={progress} />
       </CanvasMain>
     </div>

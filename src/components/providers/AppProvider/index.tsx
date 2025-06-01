@@ -78,7 +78,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // Arrow key navigation based on localStorage
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-        // console.log("e",e.key);
       const saved = localStorage.getItem("currentIndex");
       const index = saved ? parseInt(saved, 10) : 0;
 
@@ -91,7 +90,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         const prev = index - 1;
         setCurrentIndex(prev);
         router.push(routes[prev]);
-      }else if (e.key === "Home") {
+      }else if (e.key === ".") {
         setBoostSignal(Date.now()); // <-- NEW: Trigger boost
       }
     };

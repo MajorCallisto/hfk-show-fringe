@@ -31,32 +31,34 @@ const SlidePage = () => {
   }
 
   return (
-    <div className="grid grid-cols-12 grid-rows-12 h-screen">
+    <div className="mx-[98px] grid grid-cols-12 grid-rows-12 h-screen">
       {/* Left Column */}
-      <div className="col-span-6 row-span-12 flex flex-col justify-between p-8">
-        <div>
-          
-      <h1 className="text-9xl font-medium">{selectedSlide.title}</h1>
-         
-      {selectedSlide.subtitle && (
-      <h2 className="text-6xl font-medium">{selectedSlide.subtitle}</h2>
-      )}
+      <div className="col-span-6 row-span-12 grid grid-rows-12">
+        <div className="my-[79px] row-span-10 flex flex-col justify-between">
+          <h1 className="-mt-1.5">{selectedSlide.title}</h1>
+            
+          {selectedSlide.subtitle && (
+          <h2 className="pb-3">{selectedSlide.subtitle}</h2>
+          )}
         </div>
         
-      <audio autoPlay controls src={`/audio/recording-box-${slideIndex}.webm`} className="mt-4" />
+        <div className="row-span-1 flex items-end">
+          <p className="subtitle">International Style</p>
+          <audio autoPlay controls={false} src={`/audio/recording-box-${slideIndex}.webm`} className="mt-4" />
+        </div>
       </div>
 
       {/* Right Column */}
-      <div className="col-span-6 row-span-11 mb-8 mr-8 bg-gradient-to-b from-[#924289] to-[#d94e33] animate-gradient-y flex items-center justify-center">
-        {selectedSlide.model && <CanvasObject src={`/models/${selectedSlide.model}`} />}
+      <div className="col-span-6 row-span-12 grid grid-rows-12 ">
+        <div className=" row-span-10 bg-gradient-to-b from-[#924289] to-[#d94e33] flex items-end justify-center">
+          {selectedSlide.model && <CanvasObject src={`/models/${selectedSlide.model}`} />}
+        </div>
+        <div className="row-span-1 flex items-end">
+          <p className="subtitle">Display Model: {selectedSlide.object?.toUpperCase()}</p>
+        </div>
       </div>
       
-      <div className="col-span-6 row-span-1 flex items-start">
-
-        <p className="text-6xl">Display Model: {selectedSlide.object?.toUpperCase()}</p>
-      </div>
     </div>
-
   );
 };
 
