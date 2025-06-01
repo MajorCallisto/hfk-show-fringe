@@ -44,7 +44,7 @@ const GroupHome = ({ startProgress }: { startProgress: number }) => {
   return (
     <group ref={groupRef}>
       <CustomSplat
-        src="/models/beach.splat"
+        src="/models/liminal.splat"
         radiusScale={radiusScale}
         alphaTest={alphaTest}
       />
