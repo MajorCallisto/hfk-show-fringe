@@ -11,22 +11,22 @@ export const prompts = ["Hey there, I'm <name>—welcome to <play>.",
 "Hello, I'm <name>. Let's dive into <play>.",
 "Hi, <name> here, and you're about to see <play>."]
 export const slideData = [
-    { title: "Play about love #1", object: "keys", model:"keys.splat"},
-    { title: "My Grandfather's Lover", object: "rose", model:"test.splat"},
-    { title: "Losing your car in the grocery store parking lot", subtitle: "Panic Attack #1", object: "car", model:"test.splat" },
-    { title: "My friend, Jordan", object: "dropped ice cream", "model":"iceCream.splat" },
-    { title: "Shitty Beige Couch", object: "couch", "model":"couch.splat"},
-    { title: "Late night bus in Edmonton", subtitle: "Panic Attack #2", object: "phone texts", "model":"phone.splat" },
-    { title: "Mental Health History", object: "cupcake", "model":"cupcake.splat" },
-    { title: "Loneliness", object: "clipboard", "model":"test.splat" },
-    { title: "Letter of Intent", object: "pizza", "model":"pizza.splat" },
-    { title: "Messy Love", object: "potty", "model":"" },
-    { title: "Moment of Truth", object: "bag of ice", "model":"ice.splat" },
-    { title: "Shower shadows the pain", subtitle: "Panic Attack #3", object: "blue shampoo bottle", "model":"test.splat" },
-    { title: "Grade Eight", object: "razor", "model":"razor.splat" },
-    { title: "See through me", object: "20 dollar bill", "model":"twenty.splat" },
-    { title: "Play about love #2", object: "battery tea light", "model":"test.splat" }
-  ];
+  { title: "Play about love #1", object: "keys", model: "keys.splat", thumbnail: "/images/thumbnail/keys.png" },
+  { title: "My Grandfather's Lover", className: "title-sm", object: "rose", model: "test.splat" },
+  { title: "Losing your car in the grocery store parking lot", className: "title-sm", subtitle: "Panic Attack #1", object: "car", model: "test.splat" },
+  { title: "My friend, Jordan", object: "dropped ice cream", model: "iceCream.splat", thumbnail: "/images/thumbnail/iceCream.png" },
+  { title: "Shitty Beige Couch", object: "couch", model: "couch.splat", thumbnail: "/images/thumbnail/couch.png" },
+  { title: "Late night bus in Edmonton", className: "!tracking-longtitle", subtitle: "Panic Attack #2", object: "phone texts", model: "phone.splat", thumbnail: "/images/thumbnail/phone.png" },
+  { title: "Mental Health History", object: "cupcake", model: "cupcake.splat", thumbnail: "/images/thumbnail/cupcake.png" },
+  { title: "Loneliness", className: "!tracking-longtitle", object: "clipboard", model: "test.splat" },
+  { title: "Letter of Intent", object: "pizza", model: "pizza.splat", thumbnail: "/images/thumbnail/pizza.png" },
+  { title: "Messy Love", object: "potty", model: "potty.splat", thumbnail: "/images/thumbnail/potty.png" },
+  { title: "Moment of Truth", object: "bag of ice", model: "ice.splat", thumbnail: "/images/thumbnail/ice.png" },
+  { title: "Shower shadows the pain", className: "mb-12", subtitle: "Panic Attack #3", object: "blue shampoo bottle", model: "test.splat" },
+  { title: "Grade Eight", object: "razor", model: "razor.splat", thumbnail: "/images/thumbnail/razor.png" },
+  { title: "See through me", object: "20 dollar bill", model: "twenty.splat", thumbnail: "/images/thumbnail/twenty.png" },
+  { title: "Play about love #2", object: "battery tea light", model: "test.splat" }
+];
   
 
 type AppContextType = {

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 const SlidePage = () => {
   const params = useParams();
   const slideIndex = parseInt(params.slide as string);
-  const [selectedSlide, setSelectedSlide] = useState<{ title: string; subtitle?: string; object?: string, model?:string } | null>(null);
+  const [selectedSlide, setSelectedSlide] = useState<{ title: string; subtitle?: string; object?: string, model?:string, className?:string} | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("selectedItems");
@@ -31,14 +31,14 @@ const SlidePage = () => {
   }
 
   return (
-    <div className="mx-[98px] grid grid-cols-12 grid-rows-12 h-screen">
+    <div className="mx-[78px] grid grid-cols-12 grid-rows-12 h-screen">
       {/* Left Column */}
-      <div className="col-span-6 row-span-12 grid grid-rows-12">
-        <div className="my-[79px] row-span-10 flex flex-col justify-between">
-          <h1 className="-mt-1.5">{selectedSlide.title}</h1>
+      <div className="col-span-6 row-span-12 grid grid-rows-12 ml-4">
+        <div className="my-[72px] row-span-10 flex flex-col">
+          <h1 className={`-mt-1.5 ${selectedSlide?.className? `${selectedSlide?.className}`:""}`}>{selectedSlide.title}</h1>
             
           {selectedSlide.subtitle && (
-          <h2 className="pb-3">{selectedSlide.subtitle}</h2>
+          <h2 className="pb-3 mt-14l">{selectedSlide.subtitle}</h2>
           )}
         </div>
         
