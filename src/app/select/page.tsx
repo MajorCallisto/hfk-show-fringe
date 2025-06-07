@@ -150,7 +150,7 @@ const Page = () => {
             {slide.subtitle && <div className="text-xs text-black italic">{slide.subtitle}</div>}
             {slide.object && <div className="text-2xl text-black italic">{slide.object}</div>}
             
-            {slide.thumbnail && <div className="rounded-2xl overflow-hidden"><Image src={slide.thumbnail} width={128} height={128} /></div>}
+            {slide.thumbnail && <div className="rounded-2xl overflow-hidden"><Image alt="image of model" src={slide.thumbnail} width={128} height={128} /></div>}
           </motion.div>
         ))}
       </div>
@@ -169,7 +169,7 @@ const Page = () => {
                 <div>
                   <div className="font-semibold text-black">{slideData[item]?.title}</div>
                   
-                  {slideData[item].thumbnail && <div className="rounded-2xl overflow-hidden"><Image src={slideData[item].thumbnail} width={128} height={128} /></div>}
+                  {slideData[item].thumbnail && <div className="rounded-2xl overflow-hidden"><Image alt="image of selected model" src={slideData[item].thumbnail} width={128} height={128} /></div>}
           
                 </div>
                 <Button
