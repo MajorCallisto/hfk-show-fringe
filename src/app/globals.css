@@ -1,15 +1,18 @@
 @import "tailwindcss";
+@source inline("tracking-longtitle !tracking-longtitle title-sm !title-sm");
+
 
 :root {
   --background: #848581;
   --foreground: #171717;
 }
-@theme {
-  --text-9xl: 11.625rem;
-}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --tracking-longtitle: -0.5rem;
+  --tracking-normal: 0.05rem;
+  --text-8xl: 7.5rem;
+  --text-9xl: 11.625rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,5 +31,9 @@ h1{
   @apply text-9xl font-medium leading-40 tracking-tight;
 }
 h2, .subtitle{
-  @apply text-6xl font-medium tracking-wider;
+  @apply text-6xl font-medium tracking-normal;
+}
+
+.title-sm{
+  @apply text-8xl -tracking-[0.25rem] -mt-5 leading-36 mb-11;
 }

@@ -2,6 +2,7 @@
 
       import { slideData, useAppContext } from "@/components/providers/AppProvider";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
 // ---- Button Component ----
@@ -135,19 +136,21 @@ const Page = () => {
       )}
 
       <h1 className="text-2xl font-bold">Select 5 Items</h1>
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 ">
         {slideData.map((slide, index) => (
           <motion.div
             key={index}
             draggable
             onDragStart={() => setDraggingIndex(index)}
-            className="border rounded p-3 cursor-grab bg-white flex flex-col items-center text-center"
+            className="border rounded p-3 cursor-grab bg-white flex flex-col items-center text-center rounded-xl overflow-hidden"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <div className="text-sm font-semibold text-black">{slide?.title}</div>
             {slide.subtitle && <div className="text-xs text-black italic">{slide.subtitle}</div>}
             {slide.object && <div className="text-2xl text-black italic">{slide.object}</div>}
+            
+            {slide.thumbnail && <div className="rounded-2xl overflow-hidden"><Image src={slide.thumbnail} width={128} height={128} /></div>}
           </motion.div>
         ))}
       </div>
@@ -159,15 +162,15 @@ const Page = () => {
             key={idx}
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => handleDrop(idx)}
-            className="w-40 h-64 border-2 border-dashed flex flex-col items-center justify-center bg-gray-100 text-sm text-center p-2 gap-2"
+            className="w-40 h-64 border-2 border-dashed flex flex-col items-center justify-center bg-gray-100 text-sm text-center p-2 gap-2 rounded-xl"
           >
             {typeof item === "number" && (
               <>
                 <div>
                   <div className="font-semibold text-black">{slideData[item]?.title}</div>
-                  {slideData[item].object && (
-                    <div className="text-3xl text-black italic">{slideData[item].object}</div>
-                  )}
+                  
+                  {slideData[item].thumbnail && <div className="rounded-2xl overflow-hidden"><Image src={slideData[item].thumbnail} width={128} height={128} /></div>}
+          
                 </div>
                 <Button
                   onClick={() =>
