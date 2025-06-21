@@ -2,16 +2,18 @@
 
 import CanvasObject from "@/components/canvas/CanvasObject";
 import { slideData } from "@/components/providers/AppProvider";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 const SlidePage = () => {
+ 
   const params = useParams();
   const slideIndex = parseInt(params.slide as string);
   const [selectedSlide, setSelectedSlide] = useState<{ title: string; subtitle?: string; object?: string, model?:string, className?:string} | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("selectedItems");
+    
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
