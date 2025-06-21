@@ -36,13 +36,14 @@ const GroupObject = ({ src }: { src: string }) => {
             console.warn("Invalid WebSocket message:", text);
           }
         };
+        
+        return () => socket.close();
       }
       catch{
         console.log("Websocket Error Probable");
       }
     
 
-    return () => socket.close();
   }, []);
 
   return (
