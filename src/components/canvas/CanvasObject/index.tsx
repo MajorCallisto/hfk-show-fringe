@@ -17,7 +17,8 @@ const GroupObject = ({ src }: { src: string }) => {
     
       try {
         const host = window.location.hostname;
-        const socket = new WebSocket(`ws://${host}:3000/ws`);
+        const prot = window.location.protocol;
+        const socket = new WebSocket(`${prot === "https:"?"wss":"ws"}://${host}:3000/ws`);
 
         socket.onmessage = async (event) => {
           const text = event.data instanceof Blob ? await event.data.text() : event.data;
