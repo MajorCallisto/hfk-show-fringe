@@ -1,24 +1,42 @@
 "use client";
 
+import { Canvas } from "@react-three/fiber";
 import { CustomSplat } from "@/components/CustomSplat";
-import { OrbitControls } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Noise } from "@react-three/postprocessing";
-import { useRef, useState } from "react";
 import { Group } from "three";
+import { OrbitControls } from "@react-three/drei";
+import { useEffect, useRef, useState } from "react";
 
 const GroupObject = ({ src }: { src: string }) => {
   const ref = useRef<Group>(null);
   const [alphaTest] = useState(0);
   const [radiusScale] = useState(1);
+  const lastTime = useRef(performance.now());
 
-  useFrame(({  }) => {
-    if (ref.current) {
-      ref.current.rotation.x += 0.0005;
-      ref.current.rotation.y += 0.001;
-      // ref.current.rotation.z += 0.002
-    }
-  });
+  useEffect(() => {
+    const host = window.location.hostname;
+    const socket = new WebSocket(`ws://${host}:3000/ws`);
+
+    socket.onmessage = async (event) => {
+      const text = event.data instanceof Blob ? await event.data.text() : event.data;
+      try {
+        const { gx = 0, gy = 0, gz = 0 } = JSON.parse(text);
+        const now = performance.now();
+        const deltaSec = (now - lastTime.current) / 1000;
+        lastTime.current = now;
+
+        if (ref.current) {
+          ref.current.rotation.x += gy * deltaSec;
+          ref.current.rotation.y += gz * deltaSec;
+          ref.current.rotation.z += gx * deltaSec;
+        }
+      } catch {
+        console.warn("Invalid WebSocket message:", text);
+      }
+    };
+
+    return () => socket.close();
+  }, []);
 
   return (
     <group scale={20} ref={ref} position={[0, -2, 0]}>

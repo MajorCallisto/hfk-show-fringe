@@ -1,19 +1,14 @@
 "use client"
 
-import { slideData } from "@/components/providers/AppProvider";
-import { useEffect } from "react";
 import HomeComponent from "../page";
+import { useAppContext } from "@/components/providers/AppProvider";
+import { useEffect } from "react";
 
 const RandomPage = () => {
+  
+    const { setRandomSelectedItems } = useAppContext();
   useEffect(() => {
-    const length = slideData.length;
-    const selected = new Set<number>();
-
-    while (selected.size < 4 && selected.size < length) {
-      selected.add(Math.floor(Math.random() * length));
-    }
-
-    localStorage.setItem("selectedItems", JSON.stringify([...selected]));
+    setRandomSelectedItems();
     localStorage.setItem("currentIndex", JSON.stringify(0));
   }, []);
 
