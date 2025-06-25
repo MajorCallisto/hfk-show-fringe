@@ -1,3 +1,4 @@
+import AudioTrigger from "@/components/AudioTrigger";
 import { AppProvider } from "@/components/providers/AppProvider";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -19,6 +20,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         <AppProvider>
+          <AudioTrigger />
           {children}
         </AppProvider>
       </body>

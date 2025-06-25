@@ -40,7 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/public/audio
+/public/audio/recording-box-*
 
 /public/models/stump.splat
 /public/models/beachLG.ply
