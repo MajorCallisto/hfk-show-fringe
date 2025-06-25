@@ -3,7 +3,12 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const routes = ["/0", "/slide/0.01", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
+const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
+
+const audioPlaylist = [
+  { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true },
+  { path: "/audio/715634__trp__130313-waves-washy-crashes-rough-lake-ontario-notl.mp3", fadeIn: true, fadeOut: true },
+];
 
 export const prompts = ["Hey there, I'm <name>—welcome to <play>.",
 "Hi! My name's <name>, and you're watching <play>.",
@@ -11,7 +16,7 @@ export const prompts = ["Hey there, I'm <name>—welcome to <play>.",
 "Hello, I'm <name>. Let's dive into <play>.",
 "Hi, <name> here, and you're about to see <play>."]
 export const slideData = [
-  { title: "Play about love #1", object: "keys", model: "keys.splat", thumbnail: "/images/thumbnail/keys.png" },
+  { title: "Play about love #1 and 2", object: "keys", model: "keys.splat", thumbnail: "/images/thumbnail/keys.png" },
   { title: "My Grandfather's Lover", className: "title-sm", object: "rose", model: "rose.splat" },
   { title: "Losing your car in the grocery store parking lot", className: "title-sm", subtitle: "Panic Attack #1", object: "car", model: "car.splat" },
   { title: "My friend, Jordan", object: "dropped ice cream", model: "iceCream.splat", thumbnail: "/images/thumbnail/iceCream.png" },
@@ -25,10 +30,15 @@ export const slideData = [
   { title: "Shower shadows the pain", className: "mb-12", subtitle: "Panic Attack #3", object: "showerhead", model: "showerhead.splat" },
   { title: "Grade Eight", object: "razor", model: "razor.splat", thumbnail: "/images/thumbnail/razor.png" },
   { title: "See through me", object: "20 dollar bill", model: "twenty.splat", thumbnail: "/images/thumbnail/twenty.png" },
-  { title: "Play about love #2", object: "battery tea light", model: "candle.splat" },
-  { title: "Baby BLues", object: "lithium", model: "pills.splat" }
+  { title: "Baby Blues", object: "lithium", model: "pills.splat" },
+  { title: "Ashes", object: "Container", model: "ashes.splat" }
 ];
-  
+
+type AudioTriggerEvent = {
+  path: string;
+  fadeIn?: boolean;
+  fadeOut?: boolean;
+};
 
 type AppContextType = {
   selectedItems: string[];
@@ -38,7 +48,9 @@ type AppContextType = {
   setCurrentIndex: (index: number) => void;
   resetApp: () => void;
   boostSignal:number;
-  setBoostSignal?: (value: number) => void; // ← ADD THIS
+  setBoostSignal?: (value: number) => void; 
+  audioTrigger: AudioTriggerEvent | null;
+  setAudioTrigger?: (event: AudioTriggerEvent) => void;
 };
 
 export const AppContext = createContext<AppContextType>({
@@ -49,6 +61,8 @@ export const AppContext = createContext<AppContextType>({
   setCurrentIndex: () => {},
   resetApp: () => {},
   boostSignal: 0,
+  audioTrigger: null,
+  setAudioTrigger: () => {},
 });
 
 export const useAppContext = () => useContext(AppContext);
@@ -58,6 +72,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const [selectedItems, setSelectedItemsState] = useState<string[]>([]);
   const [currentIndex, setCurrentIndexState] = useState(0);
+  
+  const [playlistIndex, setPlaylistIndex] = useState(0);
   
   const setRandomSelectedItems = () => {
     const length = slideData.length;
@@ -89,6 +105,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const [boostSignal, setBoostSignal] = useState<number>(0);
+
+  const [audioTrigger, setAudioTrigger] = useState<AudioTriggerEvent | null>(null);
   
   // Arrow key navigation based on localStorage
   useEffect(() => {
@@ -106,13 +124,25 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setCurrentIndex(prev);
         router.push(routes[prev]);
       }else if (e.key === ".") {
-        setBoostSignal(Date.now()); // <-- NEW: Trigger boost
+        setBoostSignal(Date.now());
+      }else if (["0", "1", "2", "3", "4"].includes(e.key)) {
+        const triggerNum = parseInt(e.key, 10);
+        setAudioTrigger?.({
+          path: `/audio/recording-box-${triggerNum}.webm`,
+          fadeIn: true,
+          fadeOut: true,
+        });
+      }else if (e.key.toLowerCase() === "p") {
+        const nextIndex = playlistIndex % audioPlaylist.length;
+        const nextItem = audioPlaylist[nextIndex];
+        setAudioTrigger?.(nextItem);
+        setPlaylistIndex(prev => prev + 1);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [router]);
+  }, [router, setAudioTrigger, setBoostSignal, setCurrentIndex, playlistIndex]);
 
   return (
     <AppContext.Provider
@@ -123,8 +153,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         currentIndex,
         setCurrentIndex,
         resetApp,
-    boostSignal, // ← ✅ ADD THIS
-        setBoostSignal, // ← ADD THIS
+        boostSignal, 
+        setBoostSignal, 
+        audioTrigger,
+        setAudioTrigger,
       }}
     >
       {children}
