@@ -1,58 +1,74 @@
 "use client";
 
+import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { CustomSplat } from "@/components/CustomSplat";
 import { EffectComposer, Noise } from "@react-three/postprocessing";
-import { Group } from "three";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 
 const GroupObject = ({ src }: { src: string }) => {
-  const ref = useRef<Group>(null);
+  const parentRef = useRef<THREE.Group>(null); // For continuous yaw rotation
+  const ref = useRef<THREE.Group>(null);       // For pitch/roll from sensor
   const [alphaTest] = useState(0);
   const [radiusScale] = useState(1);
-  const lastTime = useRef(performance.now());
+  const smoothed = useRef({ roll: 0, pitch: 0 });
+  const alpha = 0.1;
 
+  // Animate yaw rotation over time
   useEffect(() => {
-    
-      try {
-        const host = window.location.hostname;
-        const prot = window.location.protocol;
-        const socket = new WebSocket(`${prot === "https:"?"wss":"ws"}://${host}:3000/ws`);
+    const yawAngle = 0;
 
-        socket.onmessage = async (event) => {
-          const text = event.data instanceof Blob ? await event.data.text() : event.data;
-          try {
-            const { gx = 0, gy = 0, gz = 0 } = JSON.parse(text);
-            const now = performance.now();
-            const deltaSec = (now - lastTime.current) / 1000;
-            lastTime.current = now;
+    const animate = () => {
+      if (parentRef.current) {
+        // yawAngle += yawSpeed; // Adjust rotation speed here
+        parentRef.current.rotation.y = yawAngle;
+      }
+      requestAnimationFrame(animate);
+    };
 
-            if (ref.current) {
-              ref.current.rotation.x += gy * deltaSec;
-              ref.current.rotation.y += gz * deltaSec;
-              ref.current.rotation.z += gx * deltaSec;
-            }
-          } catch {
-            console.warn("Invalid WebSocket message:", text);
+    animate();
+  }, []);
+
+  // WebSocket for roll & pitch
+  useEffect(() => {
+    try {
+      const host = window.location.hostname;
+      const prot = window.location.protocol;
+      const socket = new WebSocket(`${prot === "https:" ? "wss" : "ws"}://${host}:3000/ws`);
+
+      socket.onmessage = async (event) => {
+        const text = event.data instanceof Blob ? await event.data.text() : event.data;
+        try {
+          const { roll = 0, pitch = 0 } = JSON.parse(text); // yaw ignored
+
+          smoothed.current.roll = smoothed.current.roll * (1 - alpha) + roll * alpha;
+          smoothed.current.pitch = smoothed.current.pitch * (1 - alpha) + pitch * alpha;
+
+          if (ref.current) {
+            ref.current.rotation.x = THREE.MathUtils.degToRad(smoothed.current.pitch);
+            ref.current.rotation.z = THREE.MathUtils.degToRad(smoothed.current.roll);
           }
-        };
-        
-        return () => socket.close();
-      }
-      catch{
-        console.log("Websocket Error Probable");
-      }
-    
+        } catch {
+          console.warn("Invalid WebSocket message:", text);
+        }
+      };
 
+      return () => socket.close();
+    } catch {
+      console.log("WebSocket Error Probable");
+    }
   }, []);
 
   return (
-    <group scale={20} ref={ref} position={[0, -2, 0]}>
-      <CustomSplat src={src} alphaTest={alphaTest} radiusScale={radiusScale} />
+    <group ref={parentRef} scale={30} position={[0, -2, 0]}>
+      <group ref={ref}>
+        <CustomSplat src={src} alphaTest={alphaTest} radiusScale={radiusScale} />
+      </group>
     </group>
   );
 };
+
 
 const CanvasObject = ({ src }: { src: string }) => {
   return (

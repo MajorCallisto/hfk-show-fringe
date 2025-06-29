@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
+export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
 
 const audioPlaylist = [
   { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true },
@@ -16,22 +16,22 @@ export const prompts = ["Hey there, I'm <name>—welcome to <play>.",
 "Hello, I'm <name>. Let's dive into <play>.",
 "Hi, <name> here, and you're about to see <play>."]
 export const slideData = [
-  { title: "Play about love #1 and 2", object: "keys", model: "keys.splat", thumbnail: "/images/thumbnail/keys.png" },
-  { title: "My Grandfather's Lover", className: "title-sm", object: "rose", model: "rose.splat" },
-  { title: "Losing your car in the grocery store parking lot", className: "title-sm", subtitle: "Panic Attack #1", object: "car", model: "car.splat" },
-  { title: "My friend, Jordan", object: "dropped ice cream", model: "iceCream.splat", thumbnail: "/images/thumbnail/iceCream.png" },
-  { title: "Shitty Beige Couch", object: "couch", model: "couch.splat", thumbnail: "/images/thumbnail/couch.png" },
-  { title: "Late night bus in Edmonton", className: "!tracking-longtitle", subtitle: "Panic Attack #2", object: "phone texts", model: "phone.splat", thumbnail: "/images/thumbnail/phone.png" },
-  { title: "Mental Health History", object: "cupcake", model: "cupcake.splat", thumbnail: "/images/thumbnail/cupcake.png" },
-  { title: "Loneliness", className: "!tracking-longtitle", object: "clipboard", model: "clipboard.splat" },
-  { title: "Letter of Intent", object: "pizza", model: "pizza.splat", thumbnail: "/images/thumbnail/pizza.png" },
-  { title: "Messy Love", object: "potty", model: "potty.splat", thumbnail: "/images/thumbnail/potty.png" },
+  { title: "Play about love", object: "green carkeys on a ring",className: "",  model: "keys.splat", thumbnail: "/images/thumbnail/keys.png" },
+  { title: "My Grandfather's Lover", className: "title-md", object: "red rose with green petals", model: "rose.splat", thumbnail: "/images/thumbnail/rose.png" },
+  { title: "Losing your car in the grocery store parking lot", className: "title-md", subtitle: "Panic Attack #1", object: "yellow car with white windows", model: "car.splat", thumbnail: "/images/thumbnail/car.png"  },
+  { title: "My friend, Jordan", object: "mint ice cream cone, dropped", model: "iceCream.splat", thumbnail: "/images/thumbnail/iceCream.png" },
+  { title: "Shitty Beige Couch", object: "patterned couch", model: "couch.splat", thumbnail: "/images/thumbnail/couch.png" },
+  { title: "Late night bus in Edmonton", className: "!tracking-longtitle", subtitle: "Panic Attack #2", object: "cell phone with blue messages", model: "phone.splat", thumbnail: "/images/thumbnail/phone.png" },
+  { title: "Mental Health History", object: "frosted cupcake with sprinkles“", model: "cupcake.splat", thumbnail: "/images/thumbnail/cupcake.png" },
+  { title: "Loneliness", className: "!tracking-longtitle", object: "brown clipboard with paper", model: "clipboard.splat", thumbnail: "/images/thumbnail/clipboard.png"  },
+  { title: "Letter of Intent", object: "cheesy pepperoni pizza slice", model: "pizza.splat", thumbnail: "/images/thumbnail/pizza.png" },
+  { title: "Messy Love", object: "pink training potty", model: "potty.splat", thumbnail: "/images/thumbnail/potty.png" },
   { title: "Moment of Truth", object: "bag of ice", model: "ice.splat", thumbnail: "/images/thumbnail/ice.png" },
-  { title: "Shower shadows the pain", className: "mb-12", subtitle: "Panic Attack #3", object: "showerhead", model: "showerhead.splat" },
-  { title: "Grade Eight", object: "razor", model: "razor.splat", thumbnail: "/images/thumbnail/razor.png" },
+  { title: "Shower shadows the pain", className: "mb-12", subtitle: "Panic Attack #3", object: "a shower head", model: "showerhead.splat", thumbnail: "/images/thumbnail/showerhead.png"  },
+  // { title: "Grade Eight", object: "razor", model: "razor.splat", thumbnail: "/images/thumbnail/razor.png" },
   { title: "See through me", object: "20 dollar bill", model: "twenty.splat", thumbnail: "/images/thumbnail/twenty.png" },
-  { title: "Baby Blues", object: "lithium", model: "pills.splat" },
-  { title: "Ashes", object: "Container", model: "ashes.splat" }
+  // { title: "Baby Blues", object: "lithium", model: "pills.splat", thumbnail: "/images/thumbnail/pills.png"  },
+  { title: "Ashes", object: "non-descriptive container", model: "ashes.splat", thumbnail: "/images/thumbnail/ashes.png"  }
 ];
 
 type AudioTriggerEvent = {

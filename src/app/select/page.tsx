@@ -1,9 +1,9 @@
 "use client";
 
-      import { slideData, useAppContext } from "@/components/providers/AppProvider";
-import { motion } from "framer-motion";
+      import { routes, slideData, useAppContext } from "@/components/providers/AppProvider";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 // ---- Button Component ----
 const Button = ({ onClick, children, variant = "solid" }: { onClick: () => void; children: React.ReactNode; variant?: "solid" | "outline" }) => {
@@ -21,8 +21,9 @@ const Button = ({ onClick, children, variant = "solid" }: { onClick: () => void;
 
 // ---- Page Component ----
 const Page = () => {
+  const slideLength = routes.filter(item => item.indexOf("slide") > -1).length;
   const { setSelectedItems, resetApp } = useAppContext();
-  const [boxes, setBoxes] = useState<(number | null)[]>(Array(4).fill(null));
+  const [boxes, setBoxes] = useState<(number | null)[]>(Array(slideLength).fill(null));
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [recordingBox, setRecordingBox] = useState<number | null>(null);
   const [countdown, setCountdown] = useState<number | string | null>(null);
@@ -60,7 +61,7 @@ const Page = () => {
   };
 
   const handleReset = () => {
-    setBoxes(Array(4).fill(null));
+    setBoxes(Array(slideLength).fill(null));
     resetApp();
   };
 
