@@ -10,20 +10,23 @@ import { useEffect, useRef, useState } from "react";
 const GroupObject = ({ src }: { src: string }) => {
   const parentRef = useRef<THREE.Group>(null); // For continuous yaw rotation
   const ref = useRef<THREE.Group>(null);       // For pitch/roll from sensor
-  const [alphaTest] = useState(0);
-  const [radiusScale] = useState(1);
+  const [alphaTest, setAlphaTest] = useState(1);
+  const [radiusScale, setRadiusScale] = useState(10);
   const smoothed = useRef({ roll: 0, pitch: 0 });
   const alpha = 0.1;
 
   // Animate yaw rotation over time
   useEffect(() => {
-    const yawAngle = 0;
+    const yawSpeed = 0.0005;
+    let yawAngle = 0;
 
     const animate = () => {
       if (parentRef.current) {
-        // yawAngle += yawSpeed; // Adjust rotation speed here
+        yawAngle += yawSpeed; // Adjust rotation speed here
         parentRef.current.rotation.y = yawAngle;
       }
+      setAlphaTest(val => val > 0?val - 0.00075:0);
+      setRadiusScale(val => val > 1?val - 0.01:1);
       requestAnimationFrame(animate);
     };
 
@@ -75,7 +78,7 @@ const CanvasObject = ({ src }: { src: string }) => {
     <Canvas className="w-full h-full" gl={{ alpha: true }} style={{ background: "transparent" }}>
       <OrbitControls />
       <EffectComposer>
-        <Noise opacity={0.125} />
+        <Noise opacity={0.0625} />
       </EffectComposer>
       {src && <GroupObject src={src} />}
     </Canvas>
