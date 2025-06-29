@@ -1,10 +1,10 @@
 "use client";
 
-import { AppContext } from "@/components/providers/AppProvider";
-import { OrbitControls } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
-import { Bloom, EffectComposer, Noise, TiltShift } from "@react-three/postprocessing";
 import * as React from "react";
+import { AppContext } from "@/components/providers/AppProvider";
+import { Bloom, EffectComposer, Noise, TiltShift } from "@react-three/postprocessing";
+import { Canvas, useThree } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 
 type CanvasMainProps = {
   children: React.ReactNode;
@@ -55,15 +55,17 @@ const CanvasMain = ({ children }: CanvasMainProps) => {
 
 
   return (
-    <Canvas className="w-full h-full transition-colors duration-10000 ease-in-out" gl={{ alpha: true }} style={{ backgroundColor: currentColor }}>
-      <CameraSetup />
-      <EffectComposer>
-        <Bloom />
-        <TiltShift />
-        <Noise opacity={0.125} />
-      </EffectComposer>
-      {children}
-    </Canvas>
+    <div className="w-screen h-screen opacity-0 animate-fade-in-delay">
+      <Canvas className="w-full h-full transition-colors duration-10000 ease-in-out" gl={{ alpha: true }} style={{ backgroundColor: currentColor }}>
+        <CameraSetup />
+        <EffectComposer>
+          <Bloom />
+          <TiltShift />
+          <Noise opacity={0.125} />
+        </EffectComposer>
+        {children}
+      </Canvas>
+    </div>
   );
 };
 

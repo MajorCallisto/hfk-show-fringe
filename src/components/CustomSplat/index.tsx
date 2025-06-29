@@ -5,10 +5,10 @@
 // Adapted by:
 //   Paul Henschel twitter.com/0xca0a
 
-import { shaderMaterial } from "@react-three/drei";
-import { extend, ThreeElements, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as React from "react";
 import * as THREE from "three";
+import { extend, ThreeElements, useFrame, useLoader, useThree } from "@react-three/fiber";
+import { shaderMaterial } from "@react-three/drei";
 import { version } from "../helpers/constants";
  
 
@@ -79,7 +79,7 @@ export type SplatProps = {
 const SplatMaterial = /* @__PURE__ */ shaderMaterial(
   {
     alphaTest: 0,
-    viewport: new THREE.Vector2(1980, 1080),
+    viewport: new THREE.Vector2(1920, 1080),
     focal: 1000.0,
     centerAndScaleTexture: null,
     covAndColorTexture: null,

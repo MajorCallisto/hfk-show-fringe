@@ -1,12 +1,12 @@
 "use client";
 
 import CanvasMain from "@/components/canvas/CanvasMain";
-import { CustomSplat } from "@/components/CustomSplat";
 import { AppContext } from "@/components/providers/AppProvider";
+import { CustomSplat } from "@/components/CustomSplat";
+import { Group } from "three";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Group } from "three";
 
 const GroupHome = ({ startProgress }: { startProgress: number }) => {
   const groupRef = useRef<Group>(null);
@@ -58,7 +58,7 @@ const Home = () => {
   const progress = Math.min(Math.max(parseFloat(Array.isArray(progressParam) ? progressParam[0] : progressParam ?? "0"), 0), 1)
 
   return (
-    <div className="w-screen h-screen overflow-hidden m-0 p-0">
+    <div className="w-screen h-screen overflow-hidden m-0 p-0 cursor-none">
       <CanvasMain>
         <GroupHome startProgress={progress} />
       </CanvasMain>

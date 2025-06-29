@@ -5,6 +5,16 @@ import { useRouter } from "next/navigation";
 
 export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
 
+// export const routes = ["/slide/0","/slide/1",
+//   "/slide/2","/slide/3",
+//   "/slide/4","/slide/5",
+//   "/slide/6","/slide/7",
+//   "/slide/8","/slide/9",
+//   "/slide/10","/slide/11",
+//   "/slide/12","/slide/13",
+//   "/slide/14"
+// ];
+
 const audioPlaylist = [
   { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true },
   { path: "/audio/715634__trp__130313-waves-washy-crashes-rough-lake-ontario-notl.mp3", fadeIn: true, fadeOut: true },
@@ -22,7 +32,7 @@ export const slideData = [
   { title: "My friend, Jordan", object: "mint ice cream cone, dropped", model: "iceCream.splat", thumbnail: "/images/thumbnail/iceCream.png" },
   { title: "Shitty Beige Couch", object: "patterned couch", model: "couch.splat", thumbnail: "/images/thumbnail/couch.png" },
   { title: "Late night bus in Edmonton", className: "!tracking-longtitle", subtitle: "Panic Attack #2", object: "cell phone with blue messages", model: "phone.splat", thumbnail: "/images/thumbnail/phone.png" },
-  { title: "Mental Health History", object: "frosted cupcake with sprinkles“", model: "cupcake.splat", thumbnail: "/images/thumbnail/cupcake.png" },
+  { title: "Mental Health History", object: "frosted cupcake with sprinkles", model: "cupcake.splat", thumbnail: "/images/thumbnail/cupcake.png" },
   { title: "Loneliness", className: "!tracking-longtitle", object: "brown clipboard with paper", model: "clipboard.splat", thumbnail: "/images/thumbnail/clipboard.png"  },
   { title: "Letter of Intent", object: "cheesy pepperoni pizza slice", model: "pizza.splat", thumbnail: "/images/thumbnail/pizza.png" },
   { title: "Messy Love", object: "pink training potty", model: "potty.splat", thumbnail: "/images/thumbnail/potty.png" },
