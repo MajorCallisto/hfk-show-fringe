@@ -28,12 +28,21 @@ body {
   font-family: Helvetica Neue, Verdana, sans-serif;
 }
 h1{
-  @apply text-9xl font-medium leading-40 tracking-tight;
+  @apply text-9xl font-medium leading-40 tracking-[0.25rem];
 }
-h2, .subtitle{
+h2, .subtitle, .caption{
   @apply text-6xl font-medium tracking-normal;
+}
+.caption{
+  @apply font-light;
 }
 
 .title-sm{
   @apply text-8xl -tracking-[0.25rem] -mt-5 leading-36 mb-11;
+}
+.title-md{
+  @apply text-[8.25rem] -tracking-[0.0125rem] -mt-5 leading-32 mb-11;
+}
+.title-2md{
+  @apply text-[9rem] -tracking-[0.25rem] -mt-5 leading-36 mb-11;
 }
