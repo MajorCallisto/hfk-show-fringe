@@ -15,17 +15,13 @@ export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2"
 // ];
 
 const audioPlaylist = [
-  { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true, activeIndex:0 },
-  { path: "/audio/715634__trp__130313-waves-washy-crashes-rough-lake-ontario-notl.mp3", fadeIn: true, fadeOut: true, activeIndex:1 },
-  { path: "/audio/boxOpen.webm", fadeIn: true, fadeOut: true, activeIndex:0 },
-  { path: "/audio/test2.webm", fadeIn: true, fadeOut: true, activeIndex:1 },
-  { path: "/audio/test3.webm", fadeIn: true, fadeOut: true, activeIndex:2 },
-  { path: "/audio/test4.webm", fadeIn: true, fadeOut: true, activeIndex:3 },
-  { path: "/audio/test5.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
-  { path: "/audio/test6.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
-  { path: "/audio/test7.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
-  { path: "/audio/test8.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
-  
+  { path: "/audio/Middle of the Afternoon - Matt without his name - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:2 },
+  { path: "/audio/Crispy Rain w soupcon of guitcello June28_2025.aac", fadeIn: false, fadeOut: false, activeIndex:2 },
+  { path: "/audio/Attraction to Collapse No name - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:4 },
+  { path: "/audio/Igneous cello plucked 5ths SHAPED - June28_2025.aac", fadeIn: false, fadeOut: false, activeIndex:6 },
+  { path: "/audio/Without intro Grade Eight - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:8 },
+  { path: "/audio/Guitar and rain shaped - June28_2025.aac", fadeIn: false, fadeOut: false, activeIndex:8 },
+  { path: "/audio/Only World We Get - Ryan A - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:8 },
 ];
 
 export const prompts = ["Hey there, I'm <your name> — welcome to <play>.",

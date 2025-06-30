@@ -11,7 +11,8 @@ const AudioTrigger = () => {
   const fadeInterval = useRef<NodeJS.Timeout | null>(null);
   const lastPlayedPath = useRef<string | null>(null);
 
-  const fadeVolume = (targetVolume: number, duration: number) => {
+  const fadeVolume = (targetVolume: number, duration: number,
+    onComplete?: () => void) => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
     const steps = 20;
@@ -29,14 +30,32 @@ const AudioTrigger = () => {
       if (done) {
         audio.volume = targetVolume;
         clearInterval(fadeInterval.current!);
+        if (onComplete) onComplete();
       }
     }, stepTime);
   };
-
+  const stopCurrentAudio = (fadeOut = false) => {
+    if (audioRef.current) {
+      const currentAudio = audioRef.current;
+      if (fadeOut) {
+        fadeVolume(0, FADE_DURATION_MS, () => {
+          currentAudio.pause();
+          audioRef.current = null;
+          lastPlayedPath.current = null;
+        });
+      } else {
+        currentAudio.pause();
+        audioRef.current = null;
+        lastPlayedPath.current = null;
+      }
+    }
+  };
   useEffect(() => {
-    console.log("A");
     if (!audioTrigger || !audioTrigger.path || audioTrigger.path === lastPlayedPath.current) return;
-console.log("B");
+    // Always stop current audio before starting new one
+    if (audioRef.current) {
+      stopCurrentAudio(false);
+    }
     lastPlayedPath.current = audioTrigger.path;
 
     const audio = new Audio(audioTrigger.path);
