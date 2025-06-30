@@ -2,15 +2,19 @@
 
 import CanvasObject from "@/components/canvas/CanvasObject";
 import { slideData } from "@/components/providers/AppProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 
 const SlidePage = () => {
  
+  const audioRef = useRef<HTMLAudioElement>(null);
   const params = useParams();
   const slideIndex = parseInt(params.slide as string);
   const [selectedSlide, setSelectedSlide] = useState<{ title: string; subtitle?: string; object?: string, model?:string, className?:string} | null>(null);
 
+  const [stateAudioSrc, setStateAudioSrc] = useState("/audio/boxOpen.webm");
+
+  
   useEffect(() => {
     const saved = localStorage.getItem("selectedItems");
     
@@ -27,6 +31,9 @@ const SlidePage = () => {
       } catch {}
     }
   }, [slideIndex]);
+
+
+
 
   if (!selectedSlide) {
     return <div className="p-6 text-red-600">Slide not found or selection missing.</div>;
@@ -48,7 +55,10 @@ const SlidePage = () => {
           {selectedSlide.object && (
           <p className="caption opacity-0 animate-fade-in-slow-delay">{selectedSlide.object?.toUpperCase()}</p>
           )}
-          <audio autoPlay controls={false} src={`/audio/recording-box-${slideIndex}.webm`} className="mt-4" />
+          <audio onEnded={()=>{
+                const nextSrc = `/audio/uploads/recording-box-${slideIndex}.webm`;
+                setStateAudioSrc(nextSrc);
+          }}  ref={audioRef} autoPlay controls={false} src={stateAudioSrc} className="mt-4" />
         </div>
       </div>
 
