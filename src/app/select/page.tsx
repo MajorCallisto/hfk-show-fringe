@@ -1,6 +1,6 @@
 "use client";
 
-      import { routes, slideData, useAppContext } from "@/components/providers/AppProvider";
+      import { prompts, routes, slideData, useAppContext } from "@/components/providers/AppProvider";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -76,8 +76,6 @@ const Page = () => {
       timer -= 1;
       if (timer > 0) {
         setCountdown(timer);
-      } else if (timer === 0) {
-        setCountdown("Go");
       } else {
         clearInterval(interval);
         setCountdown(null);
@@ -100,39 +98,62 @@ const Page = () => {
     setIsRecording(true);
   };
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-      mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-        a.href = url;
-        a.download = `recording-box-${recordingBox}.webm`;
-        a.click();
+const stopRecording = () => {
+  
+  if (mediaRecorderRef.current) {
+    mediaRecorderRef.current.stop();
 
-        // Cleanup
-        setIsRecording(false);
-        setShowOverlay(false);
-        setRecordingBox(null);
-      };
-    }
-  };
+    mediaRecorderRef.current.onstop = async () => {
+      const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+
+      const formData = new FormData();
+      formData.append("audio", blob, `recording-box-${recordingBox}.webm`);
+      formData.append("boxIndex", String(recordingBox));
+
+      try {
+        const response = await fetch("/audioSubmission", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          console.error("Upload failed:", errText);
+        } else {
+          console.log("Upload succeeded");
+        }
+      } catch (err) {
+        console.error("Error uploading audio:", err);
+      }
+
+      // Cleanup
+      setIsRecording(false);
+      setShowOverlay(false);
+      setRecordingBox(null);
+    };
+  }
+};
+
 
   return (
     <div className="p-6 space-y-4 relative">
+     
       {showOverlay && (
         <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center text-white text-6xl font-bold space-y-6">
+          <h2 className="!text-8xl text-center max-w-4xlxl">{`${prompts[recordingBox || 0].replace("<your name>", "_________").replace("<play>", slideData[boxes[recordingBox || 0] || 0].title)}`}</h2>
+              
           {countdown !== null ? (
-            <div>{countdown}</div>
+            <h4>{countdown}</h4>
           ) : (
             <>
-              <div>Recording...</div>
-              <Button onClick={stopRecording} variant="outline">
-                Stop
-              </Button>
+              <h4>Recording...</h4>
             </>
           )}
+          <div className={`${countdown !== null ? "opacity-0":"opacity-100 "}`}>
+          <Button  onClick={stopRecording} variant="outline">
+            Stop
+          </Button>
+          </div>
         </div>
       )}
 
@@ -143,7 +164,7 @@ const Page = () => {
             key={index}
             draggable
             onDragStart={() => setDraggingIndex(index)}
-            className="border rounded p-3 cursor-grab bg-white flex flex-col items-center text-center rounded-xl overflow-hidden"
+            className="border p-3 cursor-grab bg-white flex flex-col items-center text-center rounded-xl overflow-hidden"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

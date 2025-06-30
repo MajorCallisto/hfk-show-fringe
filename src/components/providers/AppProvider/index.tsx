@@ -16,15 +16,24 @@ export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2"
 // ];
 
 const audioPlaylist = [
-  { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true },
-  { path: "/audio/715634__trp__130313-waves-washy-crashes-rough-lake-ontario-notl.mp3", fadeIn: true, fadeOut: true },
+  { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true, activeIndex:0 },
+  { path: "/audio/715634__trp__130313-waves-washy-crashes-rough-lake-ontario-notl.mp3", fadeIn: true, fadeOut: true, activeIndex:1 },
+  { path: "/audio/test1.webm", fadeIn: true, fadeOut: true, activeIndex:0 },
+  { path: "/audio/test2.webm", fadeIn: true, fadeOut: true, activeIndex:1 },
+  { path: "/audio/test3.webm", fadeIn: true, fadeOut: true, activeIndex:2 },
+  { path: "/audio/test4.webm", fadeIn: true, fadeOut: true, activeIndex:3 },
+  { path: "/audio/test5.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
+  { path: "/audio/test6.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
+  { path: "/audio/test7.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
+  { path: "/audio/test8.webm", fadeIn: false, fadeOut: false, activeIndex:3 },
+  
 ];
 
-export const prompts = ["Hey there, I'm <name>—welcome to <play>.",
-"Hi! My name's <name>, and you're watching <play>.",
-"I'm <name>, and this right here is <play>.",
-"Hello, I'm <name>. Let's dive into <play>.",
-"Hi, <name> here, and you're about to see <play>."]
+export const prompts = ["Hey there, I'm <your name> — welcome to <play>.",
+"Hi! My name's <your name>, and you're watching <play>.",
+"I'm <your name>, and this right here is <play>.",
+"Hello, I'm <your name>. Let's dive into <play>.",
+"Hi, <your name> here, and you're about to see <play>."]
 export const slideData = [
   { title: "Play about love", object: "green carkeys on a ring",className: "",  model: "keys.splat", thumbnail: "/images/thumbnail/keys.png" },
   { title: "My Grandfather's Lover", className: "title-md", object: "red rose with green petals", model: "rose.splat", thumbnail: "/images/thumbnail/rose.png" },
@@ -128,10 +137,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         const next = index + 1;
         const newPath = routes[next];
         setCurrentIndex(next);
+        setPlaylistIndex(0);
         router.push(newPath);
       } else if ((e.key === "ArrowLeft" || e.key === "PageUp") && index > 0) {
         const prev = index - 1;
         setCurrentIndex(prev);
+        setPlaylistIndex(0);
         router.push(routes[prev]);
       }else if (e.key === ".") {
         setBoostSignal(Date.now());
@@ -143,8 +154,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           fadeOut: true,
         });
       }else if (e.key.toLowerCase() === "p") {
-        const nextIndex = playlistIndex % audioPlaylist.length;
-        const nextItem = audioPlaylist[nextIndex];
+        const currentSlidePlaylist = audioPlaylist.filter(item => item?.activeIndex === index);
+
+        const nextIndex = playlistIndex % currentSlidePlaylist.length;
+        const nextItem = currentSlidePlaylist[nextIndex];
+        console.log("currentSlidePlaylist",currentSlidePlaylist, nextIndex, playlistIndex, nextItem.path);
         setAudioTrigger?.(nextItem);
         setPlaylistIndex(prev => prev + 1);
       }
