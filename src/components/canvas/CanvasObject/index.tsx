@@ -8,32 +8,57 @@ import { OrbitControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 
 const GroupObject = ({ src }: { src: string }) => {
-  const parentRef = useRef<THREE.Group>(null); // For continuous yaw rotation
-  const ref = useRef<THREE.Group>(null);       // For pitch/roll from sensor
+  const parentRef = useRef<THREE.Group>(null); // Yaw rotation
+  const ref = useRef<THREE.Group>(null);       // Pitch/Roll rotation
+
   const [alphaTest, setAlphaTest] = useState(1);
   const [radiusScale, setRadiusScale] = useState(10);
-  const smoothed = useRef({ roll: 0, pitch: 0 });
-  const alpha = 0.1;
 
-  // Animate yaw rotation over time
+  const smoothed = useRef({ roll: 0, pitch: 0 });
+  const target = useRef({ roll: 0, pitch: 0 });
+
+  const alpha = 0.1;         // Smoothing responsiveness
+  const epsilon = 6;        // Ignore changes smaller than 0.2 degrees
+
   useEffect(() => {
     const yawSpeed = 0.0005;
     let yawAngle = 0;
 
     const animate = () => {
+      yawAngle += yawSpeed;
+
+      // Animate yaw
       if (parentRef.current) {
-        yawAngle += yawSpeed; // Adjust rotation speed here
         parentRef.current.rotation.y = yawAngle;
       }
-      setAlphaTest(val => val > 0?val - 0.00075:0);
-      setRadiusScale(val => val > 1?val - 0.01:1);
+
+      // Smooth roll/pitch toward target if outside tolerance
+      const deltaRoll = target.current.roll - smoothed.current.roll;
+      const deltaPitch = target.current.pitch - smoothed.current.pitch;
+
+      if (Math.abs(deltaRoll) > epsilon) {
+        smoothed.current.roll += deltaRoll * alpha;
+      }
+
+      if (Math.abs(deltaPitch) > epsilon) {
+        smoothed.current.pitch += deltaPitch * alpha;
+      }
+
+      if (ref.current) {
+        ref.current.rotation.x = THREE.MathUtils.degToRad(smoothed.current.pitch);
+        ref.current.rotation.z = THREE.MathUtils.degToRad(smoothed.current.roll);
+      }
+
+      // Animate props
+      setAlphaTest(val => (val > 0 ? val - 0.00075/4 : 0));
+      setRadiusScale(val => (val > 1 ? val - 0.01/4 : 1));
+
       requestAnimationFrame(animate);
     };
 
     animate();
   }, []);
 
-  // WebSocket for roll & pitch
   useEffect(() => {
     try {
       const host = window.location.hostname;
@@ -43,14 +68,14 @@ const GroupObject = ({ src }: { src: string }) => {
       socket.onmessage = async (event) => {
         const text = event.data instanceof Blob ? await event.data.text() : event.data;
         try {
-          const { roll = 0, pitch = 0 } = JSON.parse(text); // yaw ignored
+          const { roll = 0, pitch = 0 } = JSON.parse(text);
 
-          smoothed.current.roll = smoothed.current.roll * (1 - alpha) + roll * alpha;
-          smoothed.current.pitch = smoothed.current.pitch * (1 - alpha) + pitch * alpha;
-
-          if (ref.current) {
-            ref.current.rotation.x = THREE.MathUtils.degToRad(smoothed.current.pitch);
-            ref.current.rotation.z = THREE.MathUtils.degToRad(smoothed.current.roll);
+          // Only update target if value change is meaningful
+          if (Math.abs(roll - target.current.roll) > epsilon) {
+            target.current.roll = roll;
+          }
+          if (Math.abs(pitch - target.current.pitch) > epsilon) {
+            target.current.pitch = pitch;
           }
         } catch {
           console.warn("Invalid WebSocket message:", text);
@@ -64,7 +89,7 @@ const GroupObject = ({ src }: { src: string }) => {
   }, []);
 
   return (
-    <group ref={parentRef} scale={30} position={[0, -2, 0]}>
+    <group ref={parentRef} scale={30} position={[0, -1.25, 0]}>
       <group ref={ref}>
         <CustomSplat src={src} alphaTest={alphaTest} radiusScale={radiusScale} />
       </group>
@@ -73,10 +98,11 @@ const GroupObject = ({ src }: { src: string }) => {
 };
 
 
+
 const CanvasObject = ({ src }: { src: string }) => {
   return (
-    <Canvas className="w-full h-full" gl={{ alpha: true }} style={{ background: "transparent" }}>
-      <OrbitControls />
+    <Canvas className="w-full h-full" gl={{ alpha: true }} style={{ background: "transparent" }}  camera={{ position: [0, 1.5, 3], fov: 90 }}>
+      <OrbitControls  target={[0, -0.5, 0]}   />
       <EffectComposer>
         <Noise opacity={0.0625} />
       </EffectComposer>
