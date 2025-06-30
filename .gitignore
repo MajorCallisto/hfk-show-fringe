@@ -49,3 +49,5 @@ next-env.d.ts
 /public/models/liminalLG.ply
 /public/models/liminal.ply
 /public/models/liminalLG.splat
+
+*.wav

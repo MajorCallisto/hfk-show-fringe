@@ -12,7 +12,20 @@ const SlidePage = () => {
   const slideIndex = parseInt(params.slide as string);
   const [selectedSlide, setSelectedSlide] = useState<{ title: string; subtitle?: string; object?: string, model?:string, className?:string} | null>(null);
 
-  const [stateAudioSrc, setStateAudioSrc] = useState("/audio/boxOpen.webm");
+const initPath = (() => {
+  switch (slideIndex) {
+    case 0:
+      return "/audio/Buchla Pearl Nugget A-2.aac";
+    case 1:
+      return "/audio/Buchla Pearl Nugget B-1.aac";
+    case 2:
+      return "/audio/Buchla Pearl Nugget C-1.aac";
+    default:
+      return "/audio/Buchla Pearl Nugget D-1.aac";
+  }
+})();
+
+  const [stateAudioSrc, setStateAudioSrc] = useState(initPath);
 
   
   useEffect(() => {

@@ -32,11 +32,28 @@ const AudioTrigger = () => {
       }
     }, stepTime);
   };
-
+  const stopCurrentAudio = (fadeOut = false) => {
+    if (audioRef.current) {
+      const currentAudio = audioRef.current;
+      if (fadeOut) {
+        fadeVolume(0, FADE_DURATION_MS, () => {
+          currentAudio.pause();
+          audioRef.current = null;
+          lastPlayedPath.current = null;
+        });
+      } else {
+        currentAudio.pause();
+        audioRef.current = null;
+        lastPlayedPath.current = null;
+      }
+    }
+  };
   useEffect(() => {
-    console.log("A");
     if (!audioTrigger || !audioTrigger.path || audioTrigger.path === lastPlayedPath.current) return;
-console.log("B");
+    // Always stop current audio before starting new one
+    if (audioRef.current) {
+      stopCurrentAudio(false);
+    }
     lastPlayedPath.current = audioTrigger.path;
 
     const audio = new Audio(audioTrigger.path);
