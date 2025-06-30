@@ -11,7 +11,8 @@ const AudioTrigger = () => {
   const fadeInterval = useRef<NodeJS.Timeout | null>(null);
   const lastPlayedPath = useRef<string | null>(null);
 
-  const fadeVolume = (targetVolume: number, duration: number) => {
+  const fadeVolume = (targetVolume: number, duration: number,
+    onComplete?: () => void) => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
     const steps = 20;
@@ -29,6 +30,7 @@ const AudioTrigger = () => {
       if (done) {
         audio.volume = targetVolume;
         clearInterval(fadeInterval.current!);
+        if (onComplete) onComplete();
       }
     }, stepTime);
   };
