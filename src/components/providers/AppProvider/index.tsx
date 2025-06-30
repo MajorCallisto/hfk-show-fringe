@@ -12,13 +12,12 @@ export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2"
 //   "/slide/8","/slide/9",
 //   "/slide/10","/slide/11",
 //   "/slide/12","/slide/13",
-//   "/slide/14"
 // ];
 
 const audioPlaylist = [
   { path: "/audio/Jordan voice to Cosmic space - May25 experiment.mp3", fadeIn: true, fadeOut: true, activeIndex:0 },
   { path: "/audio/715634__trp__130313-waves-washy-crashes-rough-lake-ontario-notl.mp3", fadeIn: true, fadeOut: true, activeIndex:1 },
-  { path: "/audio/test1.webm", fadeIn: true, fadeOut: true, activeIndex:0 },
+  { path: "/audio/boxOpen.webm", fadeIn: true, fadeOut: true, activeIndex:0 },
   { path: "/audio/test2.webm", fadeIn: true, fadeOut: true, activeIndex:1 },
   { path: "/audio/test3.webm", fadeIn: true, fadeOut: true, activeIndex:2 },
   { path: "/audio/test4.webm", fadeIn: true, fadeOut: true, activeIndex:3 },
@@ -130,6 +129,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // Arrow key navigation based on localStorage
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // console.log("e",e);
       const saved = localStorage.getItem("currentIndex");
       const index = saved ? parseInt(saved, 10) : 0;
 
@@ -144,8 +144,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setCurrentIndex(prev);
         setPlaylistIndex(0);
         router.push(routes[prev]);
-      }else if (e.key === ".") {
+      }else if (e.key === "F5" || e.key === "Escape") {
         setBoostSignal(Date.now());
+        e.preventDefault();
+        e.stopPropagation();
       }else if (["0", "1", "2", "3", "4"].includes(e.key)) {
         const triggerNum = parseInt(e.key, 10);
         setAudioTrigger?.({
@@ -153,12 +155,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           fadeIn: true,
           fadeOut: true,
         });
-      }else if (e.key.toLowerCase() === "p") {
+      }else if (e.key.toLowerCase() === "f") {
+        const elem = document.documentElement; // or a specific element
+        if (!document.fullscreenElement) {
+          elem.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      }else if (e.key.toLowerCase() === "p" || e.key === ".") {
         const currentSlidePlaylist = audioPlaylist.filter(item => item?.activeIndex === index);
 
         const nextIndex = playlistIndex % currentSlidePlaylist.length;
         const nextItem = currentSlidePlaylist[nextIndex];
-        console.log("currentSlidePlaylist",currentSlidePlaylist, nextIndex, playlistIndex, nextItem.path);
         setAudioTrigger?.(nextItem);
         setPlaylistIndex(prev => prev + 1);
       }

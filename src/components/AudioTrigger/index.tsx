@@ -34,18 +34,24 @@ const AudioTrigger = () => {
   };
 
   useEffect(() => {
+    console.log("A");
     if (!audioTrigger || !audioTrigger.path || audioTrigger.path === lastPlayedPath.current) return;
-
+console.log("B");
     lastPlayedPath.current = audioTrigger.path;
 
     const audio = new Audio(audioTrigger.path);
     audioRef.current = audio;
     audio.volume = audioTrigger.fadeIn ? 0 : 1;
 
-    audio.play().then(() => {
-      if (audioTrigger.fadeIn) fadeVolume(1, FADE_DURATION_MS);
-    });
-
+      audio.play().then(() => {
+        if (audioTrigger.fadeIn) fadeVolume(1, FADE_DURATION_MS);
+      })
+      .catch((err) => {
+        console.warn("Audio playback failed:", err);
+        lastPlayedPath.current = null;
+      audioRef.current = null;
+      });
+    
     audio.onended = () => {
       if (audioTrigger.fadeOut) {
         fadeVolume(0, FADE_DURATION_MS);
