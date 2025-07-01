@@ -41,7 +41,7 @@ export const slideData = [
   { title: "Letter of Intent", object: "cheesy pepperoni pizza slice", model: "pizza.splat", thumbnail: "/images/thumbnail/pizza.png" },
   { title: "Messy Love", object: "pink training potty", model: "potty.splat", thumbnail: "/images/thumbnail/potty.png" },
   { title: "Moment of Truth", object: "bag of ice", model: "ice.splat", thumbnail: "/images/thumbnail/ice.png" },
-  { title: "Shower shadows the pain", className: "mb-12", subtitle: "Panic Attack #3", object: "a shower head", model: "showerhead.splat", thumbnail: "/images/thumbnail/showerhead.png"  },
+  { title: "Showers shield pain", className: "mb-12", subtitle: "Panic Attack #3", object: "a shower head", model: "showerhead.splat", thumbnail: "/images/thumbnail/showerhead.png"  },
   // { title: "Grade Eight", object: "razor", model: "razor.splat", thumbnail: "/images/thumbnail/razor.png" },
   { title: "See through me", object: "20 dollar bill", model: "twenty.splat", thumbnail: "/images/thumbnail/twenty.png" },
   // { title: "Baby Blues", object: "lithium", model: "pills.splat", thumbnail: "/images/thumbnail/pills.png"  },
