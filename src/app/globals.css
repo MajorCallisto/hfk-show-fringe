@@ -60,6 +60,12 @@
     --foreground: #FFFFFF;
   }
 }
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #848581;
+    --foreground: #FFFFFF;
+  }
+}
 
 body {
   background: var(--background);
