@@ -11,7 +11,8 @@ import { useParams } from "next/navigation";
 const GroupHome = ({ startProgress }: { startProgress: number }) => {
   const groupRef = useRef<Group>(null);
   const [progress, setProgress] = useState(startProgress);
-  const [iterator, setIterator] = useState(0.00001);
+  const initIterator = startProgress === 0? 0.000001:0.00001;
+  const [iterator, setIterator] = useState(initIterator);
   const boostTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { boostSignal } = useContext(AppContext);
@@ -25,7 +26,7 @@ const GroupHome = ({ startProgress }: { startProgress: number }) => {
 
       if (boostTimeoutRef.current) clearTimeout(boostTimeoutRef.current);
       boostTimeoutRef.current = setTimeout(() => {
-        setIterator(0.00001);
+        setIterator(initIterator);
       }, 10000); // 10 seconds
     }
   }, [boostSignal]);

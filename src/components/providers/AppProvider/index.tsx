@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2", "/0.2", "/slide/3", "/0.5"];
+export const routes = ["/0", "/slide/0", "/0.05", "/slide/1", "/0.10", "/slide/2", "/0.15", "/slide/3", "/0.4"];
 
 // export const routes = ["/slide/0","/slide/1",
 //   "/slide/2","/slide/3",
@@ -15,13 +15,13 @@ export const routes = ["/0", "/slide/0", "/0.1", "/slide/1", "/0.15", "/slide/2"
 // ];
 
 const audioPlaylist = [
-  { path: "/audio/Middle of the Afternoon - Matt without his name - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:2 },
-  { path: "/audio/Crispy Rain w soupcon of guitcello June28_2025.aac", fadeIn: false, fadeOut: false, activeIndex:2 },
-  { path: "/audio/Attraction to Collapse No name - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:4 },
-  { path: "/audio/Igneous cello plucked 5ths SHAPED - June28_2025.aac", fadeIn: false, fadeOut: false, activeIndex:6 },
-  { path: "/audio/Without intro Grade Eight - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:8 },
-  { path: "/audio/Guitar and rain shaped - June28_2025.aac", fadeIn: false, fadeOut: false, activeIndex:8 },
-  { path: "/audio/Only World We Get - Ryan A - FX June29_2025.aac", fadeIn: false, fadeOut: false, activeIndex:8 },
+  { path: "/audio/Middle of the Afternoon - Matt without his name - FX July2_2025 - MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:2 },
+  { path: "/audio/Crispy Rain w soupcon of guitcello - July2_2025 MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:2 },
+  { path: "/audio/Attraction to Collapse No name - FX July2_2025 - MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:4 },
+  { path: "/audio/Igneous cello plucked 5ths shaped with Crispy Rain - July2_2025 - MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:6 },
+  { path: "/audio/Without intro Grade Eight - FX July2_2025 - MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:8 },
+  { path: "/audio/Guitar and rain shaped - July2_2025 - MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:8 },
+  { path: "/audio/Only World We Get - Ryan A - FX July2_2025 - MASTERED.m4a", fadeIn: false, fadeOut: false, activeIndex:8 },
 ];
 
 export const prompts = ["Hey there, I'm <your name> — welcome to <play>.",

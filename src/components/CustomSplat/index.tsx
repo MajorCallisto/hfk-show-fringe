@@ -74,6 +74,7 @@ export type SplatProps = {
   alphaHash?: boolean
   chunkSize?: number
   radiusScale?: number
+  animateInternal?:boolean
 } & Omit<ThreeElements['mesh'], 'ref'>
 
 const SplatMaterial = /* @__PURE__ */ shaderMaterial(
@@ -651,6 +652,7 @@ export function CustomSplat({
   alphaHash = false,
   chunkSize = 25000,
   radiusScale = 1,
+  animateInternal = false,
   ...props
 }: SplatProps) {
   extend({ SplatMaterial })
@@ -666,13 +668,31 @@ export function CustomSplat({
   }) as SharedState
 
   React.useLayoutEffect(() => shared.connect(ref.current), [src])
-  useFrame(() => {
-    if (ref.current?.material) {
-    ref.current.material.uTime = clock.getElapsedTime();
-  }
-    shared.update(ref.current, camera, alphaHash)
+    
+const radius = React.useRef(4);
+const alpha = React.useRef(1);
 
-  })
+useFrame(() => {
+  if (ref.current?.material) {
+    const mat = ref.current.material;
+    mat.uTime = clock.getElapsedTime();
+    if (animateInternal === true){
+      
+    // Smooth step toward target
+    if (radius.current > 1) {
+    radius.current += (1 - radius.current) * 0.005;
+    }
+    if (alpha.current > 0) {
+      alpha.current = Math.max(0, alpha.current - 0.0001); // Adjust speed here
+    }
+    mat.radiusScale = radius.current;
+    mat.alphaTest = alphaHash ? 0 : alpha.current;
+    }
+  }
+
+  shared.update(ref.current, camera, alphaHash);
+});
+
 
   return (
     <mesh ref={ref} frustumCulled={false} {...props}>
