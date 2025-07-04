@@ -5,15 +5,11 @@ import { Canvas } from "@react-three/fiber";
 import { CustomSplat } from "@/components/CustomSplat";
 import { EffectComposer, Noise } from "@react-three/postprocessing";
 import { OrbitControls } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const GroupObject = ({ src }: { src: string }) => {
   const parentRef = useRef<THREE.Group>(null); // Yaw rotation
   const ref = useRef<THREE.Group>(null);       // Pitch/Roll rotation
-
-  const [alphaTest, setAlphaTest] = useState(1);
-  const [radiusScale, setRadiusScale] = useState(10);
-
   const smoothed = useRef({ roll: 0, pitch: 0 });
   const target = useRef({ roll: 0, pitch: 0 });
 
@@ -25,38 +21,34 @@ const GroupObject = ({ src }: { src: string }) => {
     let yawAngle = 0;
 
     const animate = () => {
-      yawAngle += yawSpeed;
+        yawAngle += yawSpeed;
 
-      // Animate yaw
-      if (parentRef.current) {
-        parentRef.current.rotation.y = yawAngle;
-      }
+        if (parentRef.current) {
+          parentRef.current.rotation.y = yawAngle;
+        }
 
-      // Smooth roll/pitch toward target if outside tolerance
-      const deltaRoll = target.current.roll - smoothed.current.roll;
-      const deltaPitch = target.current.pitch - smoothed.current.pitch;
+        const deltaRoll = target.current.roll - smoothed.current.roll;
+        const deltaPitch = target.current.pitch - smoothed.current.pitch;
 
-      if (Math.abs(deltaRoll) > epsilon) {
-        smoothed.current.roll += deltaRoll * alpha;
-      }
+        if (Math.abs(deltaRoll) > epsilon) {
+          smoothed.current.roll += deltaRoll * alpha;
+        }
 
-      if (Math.abs(deltaPitch) > epsilon) {
-        smoothed.current.pitch += deltaPitch * alpha;
-      }
+        if (Math.abs(deltaPitch) > epsilon) {
+          smoothed.current.pitch += deltaPitch * alpha;
+        }
 
-      if (ref.current) {
-        ref.current.rotation.x = THREE.MathUtils.degToRad(smoothed.current.pitch);
-        ref.current.rotation.z = THREE.MathUtils.degToRad(smoothed.current.roll);
-      }
+        if (ref.current) {
+          ref.current.rotation.x = THREE.MathUtils.degToRad(smoothed.current.pitch);
+          ref.current.rotation.z = THREE.MathUtils.degToRad(smoothed.current.roll);
+        }
 
-      // Animate props
-      setAlphaTest(val => (val > 0 ? val - 0.00075/4 : 0));
-      setRadiusScale(val => (val > 1 ? val - 0.01/4 : 1));
 
       requestAnimationFrame(animate);
     };
 
-    animate();
+    requestAnimationFrame(animate);
+
   }, []);
 
   useEffect(() => {
@@ -91,7 +83,7 @@ const GroupObject = ({ src }: { src: string }) => {
   return (
     <group ref={parentRef} scale={30} position={[0, -1.25, 0]}>
       <group ref={ref}>
-        <CustomSplat src={src} alphaTest={alphaTest} radiusScale={radiusScale} />
+        <CustomSplat src={src} animateInternal={true} />
       </group>
     </group>
   );

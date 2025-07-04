@@ -15,13 +15,13 @@ const SlidePage = () => {
 const initPath = (() => {
   switch (slideIndex) {
     case 0:
-      return "/audio/Buchla Pearl Nugget A-2.aac";
+      return "/audio/Buchla Pearl Nugget A-2-less-reverb-MASTERED-TRIM.m4a";
     case 1:
-      return "/audio/Buchla Pearl Nugget B-1.aac";
+      return "/audio/Buchla Pearl Nugget B-1-less-reverb-MASTERED-TRIM.m4a";
     case 2:
-      return "/audio/Buchla Pearl Nugget C-1.aac";
+      return "/audio/Buchla Pearl Nugget C-1-less-reverb-MASTERED-TRIM.m4a";
     default:
-      return "/audio/Buchla Pearl Nugget D-1.aac";
+      return "/audio/Buchla Pearl Nugget D-1-less-reverb-MASTERED-TRIM.m4a";
   }
 })();
 
